@@ -1,0 +1,556 @@
+import React, { useState } from "react";
+import { ArrowRight, RotateCcw, Play, ImageIcon, Sparkles, X } from "lucide-react";
+
+const QUESTIONS = [
+  {
+    prompt: "When you start a new topic, what is your #1 goal?",
+    options: [
+      { letter: "C", text: 'To check who is already "ready" for the topic and who needs a different path.' },
+      { letter: "E", text: "To create a relaxed culture where the lesson feels more like a game." },
+      { letter: "A", text: 'To grab their attention immediately so the information doesn\u2019t get "lost."' },
+      { letter: "D", text: 'To get students talking to each other using specific roles like "The Predictor."' },
+      { letter: "B", text: 'To connect the topic to a "Big Idea" that is timeless and universal.' },
+    ],
+  },
+  {
+    prompt: "Your students are stuck on a difficult reading passage. What\u2019s your move?",
+    options: [
+      { letter: "D", text: 'One student "Clarifies" the hard words, another "Summarizes" the main idea.' },
+      { letter: "B", text: 'Ask them to look past the facts and find the "Universal Principle" behind it.' },
+      { letter: "E", text: 'Turn the passage into a "Fantasy" or roleplay scenario to make it come alive.' },
+      { letter: "A", text: "Break it into bite-sized pieces and use mnemonics to help them remember." },
+      { letter: "C", text: "Offer choices: draw their understanding, talk it out, or write a summary." },
+    ],
+  },
+  {
+    prompt: "What makes you happiest at the end of a lesson?",
+    options: [
+      { letter: "E", text: 'Seeing the joy that comes from students "playing" with new ideas.' },
+      { letter: "A", text: 'Knowing my students can "retrieve" what they learned in a quick quiz.' },
+      { letter: "D", text: "Watching students take ownership and lead their own discussion." },
+      { letter: "C", text: "Every student engaged because the task hit the right degree of challenge." },
+      { letter: "B", text: "Hearing a student connect a concept to a real-world event happening now." },
+    ],
+  },
+  {
+    prompt: 'If you had a teaching "Magic Wand," what would it do?',
+    options: [
+      { letter: "B", text: "Help students see the deep Big Ideas connecting all subjects." },
+      { letter: "D", text: "Turn every class into a collaborative team where everyone has a role." },
+      { letter: "A", text: "Perfectly encode information into every student\u2019s long-term memory." },
+      { letter: "E", text: "Turn the whole school into a playful place where learning feels like fun." },
+      { letter: "C", text: "Instantly tailor every worksheet to each student\u2019s learning profile." },
+    ],
+  },
+  {
+    prompt: "How do you want your students to describe your class?",
+    options: [
+      { letter: "C", text: '"The teacher really knows me and gives me work that fits."' },
+      { letter: "E", text: '"Class is a place where we can be creative and just play."' },
+      { letter: "B", text: '"I feel like I understand how the whole world works now."' },
+      { letter: "A", text: '"I finally understand how to study and remember things!"' },
+      { letter: "D", text: '"We learn so much from each other by talking together."' },
+    ],
+  },
+];
+
+const RESULTS = {
+  A: {
+    hero: "The Memory Architect",
+    pedagogy: "Information Processing Theory",
+    color: "#2D6FE0",
+    description:
+      'You should read more about Information Processing Theory. You are a master of the "Memory Pipeline," focusing on how students attend to, encode, and retrieve information.',
+  },
+  B: {
+    hero: "The Big-Picture Visionary",
+    pedagogy: "Concept-Based Inquiry",
+    color: "#7A3FE0",
+    description:
+      'You should dive deeper into Concept-Based Inquiry. You love "Big Ideas" and want students to see the "why" behind the facts through transferable, universal principles.',
+  },
+  C: {
+    hero: "The Personalizer",
+    pedagogy: "Differentiated Instruction (DI)",
+    color: "#0FA37F",
+    description:
+      "Differentiated Instruction (DI) is your calling! You believe in proactively planning for different readiness levels and interests to ensure every student succeeds.",
+  },
+  D: {
+    hero: "The Collaborative Captain",
+    pedagogy: "Reciprocal Teaching",
+    color: "#E23350",
+    description:
+      "Reciprocal Teaching is perfect for you. You value purposeful dialogue and want to empower students to lead their own learning through structured roles like Clarifying and Questioning.",
+  },
+  E: {
+    hero: "The Joy Seeker",
+    pedagogy: "Pedagogies of Play (POP)",
+    color: "#F0821F",
+    description:
+      'You are a champion for Pedagogies of Play (POP). You believe play is the foundation of learning and want to bring playfulness and "fantasy" into the classroom to spark creativity.',
+  },
+};
+
+const LETTERS = ["A", "B", "C", "D", "E"];
+
+export default function TeachingSuperpowerQuiz() {
+  const [screen, setScreen] = useState("landing");
+  const [prevScreen, setPrevScreen] = useState("landing");
+  const [qIndex, setQIndex] = useState(0);
+  const [answers, setAnswers] = useState([]);
+  const [flash, setFlash] = useState(null);
+
+  const start = () => {
+    setAnswers([]);
+    setQIndex(0);
+    setScreen("quiz");
+  };
+
+  const pick = (letter) => {
+    setFlash(letter);
+    const next = [...answers, letter];
+    setTimeout(() => {
+      setFlash(null);
+      if (qIndex + 1 < QUESTIONS.length) {
+        setAnswers(next);
+        setQIndex(qIndex + 1);
+      } else {
+        setAnswers(next);
+        setScreen("result");
+      }
+    }, 260);
+  };
+
+  const tally = () => {
+    const counts = { A: 0, B: 0, C: 0, D: 0, E: 0 };
+    answers.forEach((l) => (counts[l] += 1));
+    return counts;
+  };
+
+  const winner = () => {
+    const counts = tally();
+    let best = "A";
+    LETTERS.forEach((l) => {
+      if (counts[l] > counts[best]) best = l;
+    });
+    return best;
+  };
+
+  const openGallery = () => {
+    setPrevScreen(screen);
+    setScreen("gallery");
+  };
+
+  return (
+    <div
+      style={{
+        fontFamily: "'Baloo 2', sans-serif",
+        background: "#FFF6E3",
+        minHeight: "100vh",
+        color: "#1B1730",
+      }}
+    >
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Baloo+2:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap');
+        .display { font-family: 'Fredoka', sans-serif; font-weight: 700; letter-spacing: 0.2px; }
+        .mono { font-family: 'Space Mono', monospace; }
+        .panel {
+          border: 3.5px solid #1B1730;
+          box-shadow: 7px 7px 0 #1B1730;
+          background: #FFFDF6;
+        }
+        .halftone {
+          background-image: radial-gradient(#1B1730 1.6px, transparent 1.6px);
+          background-size: 14px 14px;
+        }
+        .opt-btn { transition: transform 0.12s ease, box-shadow 0.12s ease; }
+        .opt-btn:hover { transform: translate(-3px, -3px); box-shadow: 6px 6px 0 #1B1730; }
+        .opt-btn:active { transform: translate(0,0); box-shadow: 2px 2px 0 #1B1730; }
+        .pop-btn:hover { transform: translate(-3px, -3px) rotate(-1deg); }
+        .wiggle:hover { transform: rotate(-2deg) scale(1.03); }
+        @media (max-width: 640px) {
+          .grid-2 { grid-template-columns: 1fr !important; }
+        }
+      `}</style>
+
+      {screen === "landing" && <Landing onStart={start} />}
+      {screen === "quiz" && (
+        <Quiz index={qIndex} question={QUESTIONS[qIndex]} onPick={pick} flash={flash} />
+      )}
+      {screen === "result" && (
+        <Result letter={winner()} onRetake={start} onExplore={openGallery} />
+      )}
+      {screen === "gallery" && (
+        <Gallery current={answers.length === 5 ? winner() : null} onBack={() => setScreen(prevScreen)} />
+      )}
+    </div>
+  );
+}
+
+function Landing({ onStart }) {
+  return (
+    <div className="halftone" style={{ minHeight: "100vh" }}>
+      <div
+        style={{
+          minHeight: "100vh",
+          background: "linear-gradient(180deg, rgba(255,246,227,0.35) 0%, rgba(255,246,227,0.97) 55%)",
+        }}
+      >
+        <div className="max-w-3xl mx-auto px-6 pt-20 pb-16 flex flex-col items-center text-center">
+          <span
+            className="mono"
+            style={{
+              background: "#1B1730",
+              color: "#FFF6E3",
+              padding: "5px 14px",
+              fontSize: 12,
+              letterSpacing: 2,
+              transform: "rotate(-1.5deg)",
+              display: "inline-block",
+            }}
+          >
+            ★ TEACHER PROFESSIONAL DEVELOPMENT ★
+          </span>
+
+          <h1
+            className="display"
+            style={{
+              fontSize: "clamp(2.6rem, 8vw, 5.2rem)",
+              lineHeight: 1.02,
+              marginTop: 24,
+              textShadow: "5px 5px 0 #FFC93C, 8px 8px 0 #1B1730",
+              color: "#FFFDF6",
+              WebkitTextStroke: "2px #1B1730",
+            }}
+          >
+            WHAT'S YOUR
+            <br />
+            TEACHING SUPERPOWER?
+          </h1>
+
+          <p style={{ maxWidth: 480, marginTop: 30, fontSize: 18, lineHeight: 1.6, fontWeight: 500 }}>
+            Five quick questions. One classroom identity you already have &mdash;
+            you just haven't named it yet. Answer honestly and we'll match you
+            to the pedagogy that's already running your lessons.
+          </p>
+
+          <button
+            onClick={onStart}
+            className="opt-btn pop-btn"
+            style={{
+              marginTop: 38,
+              background: "#FFC93C",
+              border: "3.5px solid #1B1730",
+              boxShadow: "5px 5px 0 #1B1730",
+              padding: "15px 32px",
+              fontFamily: "'Fredoka', sans-serif", fontWeight: 600,
+              fontSize: 24,
+              letterSpacing: 1,
+              display: "flex",
+              alignItems: "center",
+              gap: 10,
+              cursor: "pointer",
+            }}
+          >
+            DISCOVER YOUR POWER <ArrowRight size={22} strokeWidth={3} />
+          </button>
+
+          <p className="mono" style={{ marginTop: 20, fontSize: 12, opacity: 0.7 }}>
+            5 QUESTIONS &middot; ~2 MINUTES &middot; NO CAPE REQUIRED
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function Quiz({ index, question, onPick, flash }) {
+  return (
+    <div className="max-w-2xl mx-auto px-6 py-16">
+      <div className="mono" style={{ fontSize: 12, letterSpacing: 2, marginBottom: 10 }}>
+        PANEL {index + 1} OF {QUESTIONS.length}
+      </div>
+
+      <div style={{ display: "flex", gap: 6, marginBottom: 28 }}>
+        {QUESTIONS.map((_, i) => (
+          <div
+            key={i}
+            style={{
+              flex: 1,
+              height: 11,
+              border: "2.5px solid #1B1730",
+              background: i <= index ? "#FFC93C" : "transparent",
+            }}
+          />
+        ))}
+      </div>
+
+      <div className="panel" style={{ padding: "26px 24px" }}>
+        <p className="display" style={{ fontSize: 27, lineHeight: 1.2, marginBottom: 22 }}>
+          {question.prompt}
+        </p>
+
+        <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+          {question.options.map((opt) => (
+            <button
+              key={opt.letter}
+              onClick={() => onPick(opt.letter)}
+              className="opt-btn"
+              style={{
+                textAlign: "left",
+                display: "flex",
+                alignItems: "flex-start",
+                gap: 14,
+                border: "2.5px solid #1B1730",
+                background: flash === opt.letter ? "#FFC93C" : "#FFFDF6",
+                padding: "13px 15px",
+                cursor: "pointer",
+                boxShadow: "3px 3px 0 #1B1730",
+                fontFamily: "'Baloo 2', sans-serif",
+              }}
+            >
+              <span style={{ fontSize: 16, lineHeight: 1.5, fontWeight: 500 }}>
+                {opt.text}
+              </span>
+            </button>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function Result({ letter, onRetake, onExplore }) {
+  const r = RESULTS[letter];
+
+  return (
+    <div className="max-w-3xl mx-auto px-6 py-16">
+      <div className="mono" style={{ fontSize: 12, letterSpacing: 2, marginBottom: 8, color: r.color }}>
+        ★ RESULT UNLOCKED ★
+      </div>
+      <h1
+        className="display"
+        style={{ fontSize: "clamp(2.3rem, 7vw, 3.8rem)", color: r.color, lineHeight: 1 }}
+      >
+        {r.hero}
+      </h1>
+      <p className="mono" style={{ fontSize: 12, letterSpacing: 1, opacity: 0.75, marginTop: 8, marginBottom: 18 }}>
+        PEDAGOGY: {r.pedagogy.toUpperCase()}
+      </p>
+
+      <div className="panel" style={{ padding: "22px 24px", marginBottom: 28 }}>
+        <p style={{ fontSize: 16, lineHeight: 1.65, fontWeight: 500 }}>{r.description}</p>
+      </div>
+
+      <div className="grid-2" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 22 }}>
+        {/* Superhero image placeholder */}
+        <div>
+          <div
+            className="panel halftone"
+            style={{
+              aspectRatio: "1 / 1",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              borderColor: r.color,
+              boxShadow: `7px 7px 0 ${r.color}`,
+            }}
+          >
+            <div
+              style={{
+                background: "#FFFDF6",
+                border: `2.5px dashed ${r.color}`,
+                padding: "18px 16px",
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                gap: 8,
+              }}
+            >
+              <ImageIcon size={34} strokeWidth={1.5} color={r.color} />
+              <span className="mono" style={{ fontSize: 11, textAlign: "center", maxWidth: 160 }}>
+                SUPERHERO IMAGE PLACEHOLDER
+              </span>
+            </div>
+          </div>
+        </div>
+
+        {/* Video placeholder */}
+        <div>
+          <div
+            className="panel"
+            style={{
+              aspectRatio: "1 / 1",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              flexDirection: "column",
+              gap: 10,
+              background: "#1B1730",
+              borderColor: r.color,
+              boxShadow: `7px 7px 0 ${r.color}`,
+            }}
+          >
+            <div
+              style={{
+                width: 62,
+                height: 62,
+                borderRadius: "50%",
+                background: r.color,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <Play size={26} color="#1B1730" fill="#1B1730" />
+            </div>
+            <span className="mono" style={{ fontSize: 11, color: "#FFF6E3", textAlign: "center", maxWidth: 180 }}>
+              VIDEO: INTRODUCING {r.pedagogy.toUpperCase()}
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <div style={{ display: "flex", flexWrap: "wrap", gap: 14, marginTop: 32 }}>
+        <button
+          onClick={onExplore}
+          className="opt-btn pop-btn"
+          style={{
+            background: "#FFC93C",
+            border: "3px solid #1B1730",
+            boxShadow: "5px 5px 0 #1B1730",
+            padding: "12px 22px",
+            fontFamily: "'Fredoka', sans-serif", fontWeight: 600,
+            fontSize: 18,
+            letterSpacing: 0.5,
+            display: "flex",
+            alignItems: "center",
+            gap: 8,
+            cursor: "pointer",
+          }}
+        >
+          <Sparkles size={18} /> MEET ALL FIVE SUPERPOWERS
+        </button>
+
+        <button
+          onClick={onRetake}
+          className="opt-btn"
+          style={{
+            background: "#FFFDF6",
+            border: "2.5px solid #1B1730",
+            boxShadow: "4px 4px 0 #1B1730",
+            padding: "12px 20px",
+            fontFamily: "'Space Mono', monospace",
+            fontSize: 13,
+            letterSpacing: 1,
+            display: "flex",
+            alignItems: "center",
+            gap: 8,
+            cursor: "pointer",
+          }}
+        >
+          <RotateCcw size={15} /> RETAKE THE QUIZ
+        </button>
+      </div>
+    </div>
+  );
+}
+
+function Gallery({ current, onBack }) {
+  return (
+    <div className="max-w-3xl mx-auto px-6 py-16">
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 8 }}>
+        <span className="mono" style={{ fontSize: 12, letterSpacing: 2, opacity: 0.75 }}>
+          ★ THE FULL ROSTER ★
+        </span>
+        <button
+          onClick={onBack}
+          className="opt-btn"
+          style={{
+            background: "#FFFDF6",
+            border: "2.5px solid #1B1730",
+            boxShadow: "3px 3px 0 #1B1730",
+            padding: "6px 12px",
+            display: "flex",
+            alignItems: "center",
+            gap: 6,
+            fontFamily: "'Space Mono', monospace",
+            fontSize: 12,
+            cursor: "pointer",
+          }}
+        >
+          <X size={14} /> CLOSE
+        </button>
+      </div>
+
+      <h2 className="display" style={{ fontSize: "clamp(2rem, 6vw, 3rem)", marginBottom: 24 }}>
+        MEET THE FIVE SUPERPOWERS
+      </h2>
+
+      <div style={{ display: "flex", flexDirection: "column", gap: 18 }}>
+        {LETTERS.map((l) => {
+          const r = RESULTS[l];
+          const isYou = l === current;
+          return (
+            <div
+              key={l}
+              className="panel"
+              style={{
+                padding: "20px 22px",
+                borderColor: r.color,
+                boxShadow: `6px 6px 0 ${r.color}`,
+                position: "relative",
+              }}
+            >
+              {isYou && (
+                <span
+                  className="display"
+                  style={{
+                    position: "absolute",
+                    top: -14,
+                    right: 16,
+                    background: "#FFC93C",
+                    border: "2.5px solid #1B1730",
+                    padding: "2px 10px",
+                    fontSize: 14,
+                    transform: "rotate(3deg)",
+                  }}
+                >
+                  THAT'S YOU!
+                </span>
+              )}
+              <div style={{ display: "flex", alignItems: "baseline", gap: 10, flexWrap: "wrap" }}>
+                <span
+                  className="display"
+                  style={{
+                    width: 34,
+                    height: 34,
+                    borderRadius: "50%",
+                    border: "2.5px solid #1B1730",
+                    background: r.color,
+                    color: "#FFFDF6",
+                    display: "inline-flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    fontSize: 17,
+                    flexShrink: 0,
+                  }}
+                >
+                  {l}
+                </span>
+                <span className="display" style={{ fontSize: 24, color: r.color }}>
+                  {r.hero}
+                </span>
+              </div>
+              <p className="mono" style={{ fontSize: 11, letterSpacing: 1, opacity: 0.7, margin: "8px 0" }}>
+                PEDAGOGY: {r.pedagogy.toUpperCase()}
+              </p>
+              <p style={{ fontSize: 15, lineHeight: 1.55, fontWeight: 500 }}>{r.description}</p>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
