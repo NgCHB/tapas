@@ -91,10 +91,7 @@
     overflow: hidden;
   }
   .media-box iframe { width: 100%; height: 100%; border: none; }
-  .img-placeholder-inner {
-    background: var(--card); padding: 18px 16px; display: flex; flex-direction: column;
-    align-items: center; gap: 8px;
-  }
+  .media-box img { width: 100%; height: 100%; object-fit: cover; }
   .result-actions { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 32px; }
   .action-btn {
     border: 3px solid var(--ink); padding: 12px 22px; font-family: 'Fredoka', sans-serif;
@@ -127,7 +124,9 @@
   }
   .roster-name { font-size: 24px; }
   .roster-ped { font-size: 11px; letter-spacing: 1px; opacity: .7; margin: 8px 0; }
-  .roster-desc { font-size: 15px; line-height: 1.55; font-weight: 500; margin: 0; }
+  .roster-desc { font-size: 15px; line-height: 1.55; font-weight: 500; margin: 0 0 16px; }
+  .roster-video { aspect-ratio: 4 / 3; max-width: 320px; overflow: hidden; }
+  .roster-video iframe { width: 100%; height: 100%; border: none; }
 
   .hidden { display: none; }
 </style>
@@ -192,7 +191,7 @@ const QUESTIONS = [
   },
 ];
 
-// Replace each fileId below with the real Google Drive file ID for that video.
+// Replace each fileId with the real Google Drive file ID, and each imageSrc with the real image path/URL, for that superhero.
 const RESULTS = {
   A: {
     hero: "The Memory Architect",
@@ -201,6 +200,7 @@ const RESULTS = {
     description:
       'You should read more about Information Processing Theory. You are a master of the "Memory Pipeline," focusing on how students attend to, encode, and retrieve information.',
     fileId: "FILE_ID",
+    imageSrc: "xx",
   },
   B: {
     hero: "The Big-Picture Visionary",
@@ -208,7 +208,8 @@ const RESULTS = {
     color: "#7A3FE0",
     description:
       'You should dive deeper into Concept-Based Inquiry. You love "Big Ideas" and want students to see the "why" behind the facts through transferable, universal principles.',
-    fileId: "FILE_ID",
+    fileId: "1kCXPTGWTAk_IQUYJxpQyYeN9XvTN3gBm",
+    imageSrc: "https://drive.google.com/file/d/1UiolycDTnJvz0n4NtEH_Khyxi_c3J5pW/view?usp=sharing",
   },
   C: {
     hero: "The Personalizer",
@@ -217,6 +218,7 @@ const RESULTS = {
     description:
       "Differentiated Instruction (DI) is your calling! You believe in proactively planning for different readiness levels and interests to ensure every student succeeds.",
     fileId: "FILE_ID",
+    imageSrc: "xx",
   },
   D: {
     hero: "The Collaborative Captain",
@@ -225,6 +227,7 @@ const RESULTS = {
     description:
       "Reciprocal Teaching is perfect for you. You value purposeful dialogue and want to empower students to lead their own learning through structured roles like Clarifying and Questioning.",
     fileId: "FILE_ID",
+    imageSrc: "xx",
   },
   E: {
     hero: "The Joy Seeker",
@@ -233,6 +236,7 @@ const RESULTS = {
     description:
       'You are a champion for Pedagogies of Play (POP). You believe play is the foundation of learning and want to bring playfulness and "fantasy" into the classroom to spark creativity.',
     fileId: "FILE_ID",
+    imageSrc: "xx",
   },
 };
 
@@ -382,10 +386,7 @@ function renderResult() {
 
       <div class="media-grid">
         <div class="panel halftone media-box" style="border-color:${r.color};box-shadow:7px 7px 0 ${r.color};">
-          <div class="img-placeholder-inner" style="border:2.5px dashed ${r.color};">
-            <span style="color:${r.color};">${icon.image}</span>
-            <span class="mono" style="font-size:11px;text-align:center;max-width:160px;">SUPERHERO IMAGE PLACEHOLDER</span>
-          </div>
+          <img src="${r.imageSrc}" alt="${r.imageSrc}" />
         </div>
 
         <div class="panel media-box" style="background:var(--ink);border-color:${r.color};box-shadow:7px 7px 0 ${r.color};">
@@ -394,7 +395,7 @@ function renderResult() {
       </div>
 
       <div class="result-actions">
-        <button id="exploreBtn" class="opt-btn pop-btn action-btn primary">${icon.sparkles} MEET ALL FIVE SUPERPOWERS</button>
+        <button id="exploreBtn" class="opt-btn pop-btn action-btn primary">${icon.sparkles} MEET ALL FIVE SUPERHEROES</button>
         <button id="retakeBtn" class="opt-btn action-btn secondary">${icon.redo} RETAKE THE QUIZ</button>
       </div>
     </div>
@@ -417,6 +418,9 @@ function renderGallery() {
         </div>
         <p class="mono roster-ped">PEDAGOGY: ${r.pedagogy.toUpperCase()}</p>
         <p class="roster-desc">${r.description}</p>
+        <div class="panel roster-video" style="background:var(--ink);border-color:${r.color};box-shadow:5px 5px 0 ${r.color};">
+          ${driveEmbed(r.fileId)}
+        </div>
       </div>
     `;
   }).join("");
@@ -427,7 +431,7 @@ function renderGallery() {
         <span class="mono" style="font-size:12px;letter-spacing:2px;opacity:.75;">\u2605 THE FULL ROSTER \u2605</span>
         <button id="closeBtn" class="opt-btn close-btn">${icon.x} CLOSE</button>
       </div>
-      <h2 class="display" style="font-size:clamp(2rem,6vw,3rem);margin-bottom:24px;">MEET THE FIVE SUPERPOWERS</h2>
+      <h2 class="display" style="font-size:clamp(2rem,6vw,3rem);margin-bottom:24px;">MEET THE FIVE SUPERHEROES</h2>
       ${cards}
     </div>
   `;
