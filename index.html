@@ -1,5 +1,143 @@
-import React, { useState } from "react";
-import { ArrowRight, RotateCcw, Play, ImageIcon, Sparkles, X } from "lucide-react";
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>What's Your Teaching Superpower?</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Baloo+2:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --paper: #FFF6E3;
+    --card: #FFFDF6;
+    --ink: #1B1730;
+    --gold: #FFC93C;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: 'Baloo 2', sans-serif;
+  }
+  .display { font-family: 'Fredoka', sans-serif; font-weight: 700; letter-spacing: 0.2px; }
+  .mono { font-family: 'Space Mono', monospace; }
+  .wrap { max-width: 760px; margin: 0 auto; padding: 64px 24px 80px; }
+  .halftone {
+    background-image: radial-gradient(var(--ink) 1.6px, transparent 1.6px);
+    background-size: 14px 14px;
+  }
+  .panel {
+    border: 3.5px solid var(--ink);
+    box-shadow: 7px 7px 0 var(--ink);
+    background: var(--card);
+  }
+  button { font-family: inherit; }
+  .opt-btn { transition: transform .12s ease, box-shadow .12s ease; }
+  .opt-btn:hover { transform: translate(-3px,-3px); box-shadow: 6px 6px 0 var(--ink); }
+  .opt-btn:active { transform: translate(0,0); box-shadow: 2px 2px 0 var(--ink); }
+  .pop-btn:hover { transform: translate(-3px,-3px) rotate(-1deg); }
+
+  /* Landing */
+  .landing-bg {
+    min-height: 100vh;
+    background: linear-gradient(180deg, rgba(255,246,227,0.35) 0%, rgba(255,246,227,0.97) 55%);
+  }
+  .landing-inner { display: flex; flex-direction: column; align-items: center; text-align: center; }
+  .badge {
+    background: var(--ink); color: var(--paper); padding: 5px 14px; font-size: 12px;
+    letter-spacing: 2px; display: inline-block; transform: rotate(-1.5deg);
+  }
+  .hero-title {
+    font-size: clamp(2.6rem, 8vw, 5.2rem);
+    line-height: 1.02; margin-top: 24px;
+    text-shadow: 5px 5px 0 var(--gold), 8px 8px 0 var(--ink);
+    color: var(--card);
+    -webkit-text-stroke: 2px var(--ink);
+  }
+  .start-btn {
+    margin-top: 38px; background: var(--gold); border: 3.5px solid var(--ink);
+    box-shadow: 5px 5px 0 var(--ink); padding: 15px 32px; font-family: 'Fredoka', sans-serif;
+    font-weight: 600; font-size: 22px; display: inline-flex; align-items: center; gap: 10px;
+    cursor: pointer;
+  }
+
+  /* Quiz */
+  .progress-row { display: flex; gap: 6px; margin-bottom: 28px; }
+  .progress-seg { flex: 1; height: 11px; border: 2.5px solid var(--ink); background: transparent; }
+  .progress-seg.filled { background: var(--gold); }
+  .q-panel { padding: 26px 24px; }
+  .q-prompt { font-size: 27px; line-height: 1.2; margin-bottom: 22px; }
+  .options-col { display: flex; flex-direction: column; gap: 12px; }
+  .opt-btn-item {
+    text-align: left; border: 2.5px solid var(--ink); background: var(--card);
+    padding: 13px 15px; cursor: pointer; box-shadow: 3px 3px 0 var(--ink);
+    font-family: 'Baloo 2', sans-serif; font-size: 16px; line-height: 1.5; font-weight: 500;
+    width: 100%;
+  }
+  .opt-btn-item.flash { background: var(--gold); }
+
+  /* Result */
+  .result-eyebrow { font-size: 12px; letter-spacing: 2px; margin-bottom: 8px; }
+  .result-hero { font-size: clamp(2.3rem, 7vw, 3.8rem); line-height: 1; }
+  .result-pedagogy { font-size: 12px; letter-spacing: 1px; opacity: .75; margin-top: 8px; margin-bottom: 18px; }
+  .desc-panel { padding: 22px 24px; margin-bottom: 28px; }
+  .desc-panel p { font-size: 16px; line-height: 1.65; font-weight: 500; margin: 0; }
+  .media-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; }
+  @media (max-width: 640px) { .media-grid { grid-template-columns: 1fr; } }
+  .media-box {
+    aspect-ratio: 1 / 1; display: flex; align-items: center; justify-content: center;
+    overflow: hidden;
+  }
+  .media-box iframe { width: 100%; height: 100%; border: none; }
+  .img-placeholder-inner {
+    background: var(--card); padding: 18px 16px; display: flex; flex-direction: column;
+    align-items: center; gap: 8px;
+  }
+  .result-actions { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 32px; }
+  .action-btn {
+    border: 3px solid var(--ink); padding: 12px 22px; font-family: 'Fredoka', sans-serif;
+    font-weight: 600; font-size: 17px; display: inline-flex; align-items: center; gap: 8px;
+    cursor: pointer;
+  }
+  .action-btn.primary { background: var(--gold); box-shadow: 5px 5px 0 var(--ink); }
+  .action-btn.secondary {
+    background: var(--card); box-shadow: 4px 4px 0 var(--ink); font-family: 'Space Mono', monospace;
+    font-size: 13px; font-weight: 400; letter-spacing: 1px;
+  }
+
+  /* Gallery */
+  .gallery-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+  .close-btn {
+    background: var(--card); border: 2.5px solid var(--ink); box-shadow: 3px 3px 0 var(--ink);
+    padding: 6px 12px; display: inline-flex; align-items: center; gap: 6px;
+    font-family: 'Space Mono', monospace; font-size: 12px; cursor: pointer;
+  }
+  .roster-card { padding: 20px 22px; position: relative; margin-bottom: 18px; }
+  .you-badge {
+    position: absolute; top: -14px; right: 16px; background: var(--gold);
+    border: 2.5px solid var(--ink); padding: 2px 10px; font-size: 14px; transform: rotate(3deg);
+  }
+  .roster-head { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+  .roster-badge {
+    width: 34px; height: 34px; border-radius: 50%; border: 2.5px solid var(--ink);
+    color: var(--card); display: inline-flex; align-items: center; justify-content: center;
+    font-size: 17px; flex-shrink: 0;
+  }
+  .roster-name { font-size: 24px; }
+  .roster-ped { font-size: 11px; letter-spacing: 1px; opacity: .7; margin: 8px 0; }
+  .roster-desc { font-size: 15px; line-height: 1.55; font-weight: 500; margin: 0; }
+
+  .hidden { display: none; }
+</style>
+</head>
+<body>
+
+<div id="app"></div>
+
+<script>
+/* ---------- DATA ---------- */
 
 const QUESTIONS = [
   {
@@ -13,7 +151,7 @@ const QUESTIONS = [
     ],
   },
   {
-    prompt: "Your students are stuck on a difficult concept or passage. What\u2019s your move?",
+    prompt: "Your students are stuck on a difficult reading passage. What\u2019s your move?",
     options: [
       { letter: "D", text: 'One student "Clarifies" the hard words, another "Summarizes" the main idea.' },
       { letter: "B", text: 'Ask them to look past the facts and find the "Universal Principle" behind it.' },
@@ -54,6 +192,7 @@ const QUESTIONS = [
   },
 ];
 
+// Replace each fileId below with the real Google Drive file ID for that video.
 const RESULTS = {
   A: {
     hero: "The Memory Architect",
@@ -61,6 +200,7 @@ const RESULTS = {
     color: "#2D6FE0",
     description:
       'You should read more about Information Processing Theory. You are a master of the "Memory Pipeline," focusing on how students attend to, encode, and retrieve information.',
+    fileId: "FILE_ID",
   },
   B: {
     hero: "The Big-Picture Visionary",
@@ -68,6 +208,7 @@ const RESULTS = {
     color: "#7A3FE0",
     description:
       'You should dive deeper into Concept-Based Inquiry. You love "Big Ideas" and want students to see the "why" behind the facts through transferable, universal principles.',
+    fileId: "FILE_ID",
   },
   C: {
     hero: "The Personalizer",
@@ -75,6 +216,7 @@ const RESULTS = {
     color: "#0FA37F",
     description:
       "Differentiated Instruction (DI) is your calling! You believe in proactively planning for different readiness levels and interests to ensure every student succeeds.",
+    fileId: "FILE_ID",
   },
   D: {
     hero: "The Collaborative Captain",
@@ -82,6 +224,7 @@ const RESULTS = {
     color: "#E23350",
     description:
       "Reciprocal Teaching is perfect for you. You value purposeful dialogue and want to empower students to lead their own learning through structured roles like Clarifying and Questioning.",
+    fileId: "FILE_ID",
   },
   E: {
     hero: "The Joy Seeker",
@@ -89,468 +232,209 @@ const RESULTS = {
     color: "#F0821F",
     description:
       'You are a champion for Pedagogies of Play (POP). You believe play is the foundation of learning and want to bring playfulness and "fantasy" into the classroom to spark creativity.',
+    fileId: "FILE_ID",
   },
 };
 
 const LETTERS = ["A", "B", "C", "D", "E"];
 
-export default function TeachingSuperpowerQuiz() {
-  const [screen, setScreen] = useState("landing");
-  const [prevScreen, setPrevScreen] = useState("landing");
-  const [qIndex, setQIndex] = useState(0);
-  const [answers, setAnswers] = useState([]);
-  const [flash, setFlash] = useState(null);
+/* ---------- STATE ---------- */
 
-  const start = () => {
-    setAnswers([]);
-    setQIndex(0);
-    setScreen("quiz");
-  };
+let screen = "landing"; // landing | quiz | result | gallery
+let prevScreen = "landing";
+let qIndex = 0;
+let answers = [];
+let flashLetter = null;
 
-  const pick = (letter) => {
-    setFlash(letter);
-    const next = [...answers, letter];
-    setTimeout(() => {
-      setFlash(null);
-      if (qIndex + 1 < QUESTIONS.length) {
-        setAnswers(next);
-        setQIndex(qIndex + 1);
-      } else {
-        setAnswers(next);
-        setScreen("result");
-      }
-    }, 260);
-  };
+const app = document.getElementById("app");
 
-  const tally = () => {
-    const counts = { A: 0, B: 0, C: 0, D: 0, E: 0 };
-    answers.forEach((l) => (counts[l] += 1));
-    return counts;
-  };
+/* ---------- ICONS (inline SVG, no dependency) ---------- */
 
-  const winner = () => {
-    const counts = tally();
-    let best = "A";
-    LETTERS.forEach((l) => {
-      if (counts[l] > counts[best]) best = l;
-    });
-    return best;
-  };
+const icon = {
+  arrow: `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>`,
+  redo: `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>`,
+  sparkles: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v4M12 17v4M3 12h4M17 12h4M5.6 5.6l2.8 2.8M15.6 15.6l2.8 2.8M18.4 5.6l-2.8 2.8M8.4 15.6l-2.8 2.8"/></svg>`,
+  image: `<svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>`,
+  x: `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>`,
+};
 
-  const openGallery = () => {
-    setPrevScreen(screen);
-    setScreen("gallery");
-  };
+/* ---------- LOGIC ---------- */
 
-  return (
-    <div
-      style={{
-        fontFamily: "'Baloo 2', sans-serif",
-        background: "#FFF6E3",
-        minHeight: "100vh",
-        color: "#1B1730",
-      }}
-    >
-      <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Baloo+2:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap');
-        .display { font-family: 'Fredoka', sans-serif; font-weight: 700; letter-spacing: 0.2px; }
-        .mono { font-family: 'Space Mono', monospace; }
-        .panel {
-          border: 3.5px solid #1B1730;
-          box-shadow: 7px 7px 0 #1B1730;
-          background: #FFFDF6;
-        }
-        .halftone {
-          background-image: radial-gradient(#1B1730 1.6px, transparent 1.6px);
-          background-size: 14px 14px;
-        }
-        .opt-btn { transition: transform 0.12s ease, box-shadow 0.12s ease; }
-        .opt-btn:hover { transform: translate(-3px, -3px); box-shadow: 6px 6px 0 #1B1730; }
-        .opt-btn:active { transform: translate(0,0); box-shadow: 2px 2px 0 #1B1730; }
-        .pop-btn:hover { transform: translate(-3px, -3px) rotate(-1deg); }
-        .wiggle:hover { transform: rotate(-2deg) scale(1.03); }
-        @media (max-width: 640px) {
-          .grid-2 { grid-template-columns: 1fr !important; }
-        }
-      `}</style>
-
-      {screen === "landing" && <Landing onStart={start} />}
-      {screen === "quiz" && (
-        <Quiz index={qIndex} question={QUESTIONS[qIndex]} onPick={pick} flash={flash} />
-      )}
-      {screen === "result" && (
-        <Result letter={winner()} onRetake={start} onExplore={openGallery} />
-      )}
-      {screen === "gallery" && (
-        <Gallery current={answers.length === 5 ? winner() : null} onBack={() => setScreen(prevScreen)} />
-      )}
-    </div>
-  );
+function start() {
+  answers = [];
+  qIndex = 0;
+  screen = "quiz";
+  render();
 }
 
-function Landing({ onStart }) {
-  return (
-    <div className="halftone" style={{ minHeight: "100vh" }}>
-      <div
-        style={{
-          minHeight: "100vh",
-          background: "linear-gradient(180deg, rgba(255,246,227,0.35) 0%, rgba(255,246,227,0.97) 55%)",
-        }}
-      >
-        <div className="max-w-3xl mx-auto px-6 pt-20 pb-16 flex flex-col items-center text-center">
-          <span
-            className="mono"
-            style={{
-              background: "#1B1730",
-              color: "#FFF6E3",
-              padding: "5px 14px",
-              fontSize: 12,
-              letterSpacing: 2,
-              transform: "rotate(-1.5deg)",
-              display: "inline-block",
-            }}
-          >
-            ★ TEACHER PROFESSIONAL DEVELOPMENT ★
-          </span>
+function pick(letter) {
+  flashLetter = letter;
+  render();
+  setTimeout(() => {
+    flashLetter = null;
+    answers.push(letter);
+    if (qIndex + 1 < QUESTIONS.length) {
+      qIndex += 1;
+      render();
+    } else {
+      screen = "result";
+      render();
+    }
+  }, 260);
+}
 
-          <h1
-            className="display"
-            style={{
-              fontSize: "clamp(2.6rem, 8vw, 5.2rem)",
-              lineHeight: 1.02,
-              marginTop: 24,
-              textShadow: "5px 5px 0 #FFC93C, 8px 8px 0 #1B1730",
-              color: "#FFFDF6",
-              WebkitTextStroke: "2px #1B1730",
-            }}
-          >
-            WHAT'S YOUR
-            <br />
-            TEACHING SUPERPOWER?
-          </h1>
+function winner() {
+  const counts = { A: 0, B: 0, C: 0, D: 0, E: 0 };
+  answers.forEach((l) => (counts[l] += 1));
+  let best = "A";
+  LETTERS.forEach((l) => { if (counts[l] > counts[best]) best = l; });
+  return best;
+}
 
-          <p style={{ maxWidth: 480, marginTop: 30, fontSize: 18, lineHeight: 1.6, fontWeight: 500 }}>
+function openGallery() {
+  prevScreen = screen;
+  screen = "gallery";
+  render();
+}
+
+function closeGallery() {
+  screen = prevScreen;
+  render();
+}
+
+function driveEmbed(fileId) {
+  return `<iframe src="https://drive.google.com/file/d/${fileId}/preview" width="640" height="480" allow="autoplay"></iframe>`;
+}
+
+/* ---------- RENDER ---------- */
+
+function render() {
+  if (screen === "landing") return renderLanding();
+  if (screen === "quiz") return renderQuiz();
+  if (screen === "result") return renderResult();
+  if (screen === "gallery") return renderGallery();
+}
+
+function renderLanding() {
+  app.innerHTML = `
+    <div class="halftone" style="min-height:100vh;">
+      <div class="landing-bg">
+        <div class="wrap landing-inner">
+          <span class="mono badge">\u2605 TEACHER PROFESSIONAL DEVELOPMENT \u2605</span>
+          <h1 class="display hero-title">WHAT'S YOUR<br/>TEACHING SUPERPOWER?</h1>
+          <p style="max-width:480px;margin-top:30px;font-size:18px;line-height:1.6;font-weight:500;">
             Five quick questions. One classroom identity you already have &mdash;
             you just haven't named it yet. Answer honestly and we'll match you
             to the pedagogy that's already running your lessons.
           </p>
-
-          <button
-            onClick={onStart}
-            className="opt-btn pop-btn"
-            style={{
-              marginTop: 38,
-              background: "#FFC93C",
-              border: "3.5px solid #1B1730",
-              boxShadow: "5px 5px 0 #1B1730",
-              padding: "15px 32px",
-              fontFamily: "'Fredoka', sans-serif", fontWeight: 600,
-              fontSize: 24,
-              letterSpacing: 1,
-              display: "flex",
-              alignItems: "center",
-              gap: 10,
-              cursor: "pointer",
-            }}
-          >
-            DISCOVER YOUR POWER <ArrowRight size={22} strokeWidth={3} />
+          <button id="startBtn" class="opt-btn pop-btn start-btn">
+            DISCOVER YOUR POWER ${icon.arrow}
           </button>
-
-          <p className="mono" style={{ marginTop: 20, fontSize: 12, opacity: 0.7 }}>
+          <p class="mono" style="margin-top:20px;font-size:12px;opacity:.7;">
             5 QUESTIONS &middot; ~2 MINUTES &middot; NO CAPE REQUIRED
           </p>
         </div>
       </div>
     </div>
-  );
+  `;
+  document.getElementById("startBtn").addEventListener("click", start);
 }
 
-function Quiz({ index, question, onPick, flash }) {
-  return (
-    <div className="max-w-2xl mx-auto px-6 py-16">
-      <div className="mono" style={{ fontSize: 12, letterSpacing: 2, marginBottom: 10 }}>
-        PANEL {index + 1} OF {QUESTIONS.length}
+function renderQuiz() {
+  const question = QUESTIONS[qIndex];
+  const segments = QUESTIONS.map((_, i) =>
+    `<div class="progress-seg ${i <= qIndex ? "filled" : ""}"></div>`
+  ).join("");
+  const options = question.options.map((opt) => `
+    <button class="opt-btn opt-btn-item ${flashLetter === opt.letter ? "flash" : ""}" data-letter="${opt.letter}">
+      ${opt.text}
+    </button>
+  `).join("");
+
+  app.innerHTML = `
+    <div class="wrap" style="padding-top:64px;">
+      <div class="mono" style="font-size:12px;letter-spacing:2px;margin-bottom:10px;">
+        PANEL ${qIndex + 1} OF ${QUESTIONS.length}
       </div>
-
-      <div style={{ display: "flex", gap: 6, marginBottom: 28 }}>
-        {QUESTIONS.map((_, i) => (
-          <div
-            key={i}
-            style={{
-              flex: 1,
-              height: 11,
-              border: "2.5px solid #1B1730",
-              background: i <= index ? "#FFC93C" : "transparent",
-            }}
-          />
-        ))}
-      </div>
-
-      <div className="panel" style={{ padding: "26px 24px" }}>
-        <p className="display" style={{ fontSize: 27, lineHeight: 1.2, marginBottom: 22 }}>
-          {question.prompt}
-        </p>
-
-        <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-          {question.options.map((opt) => (
-            <button
-              key={opt.letter}
-              onClick={() => onPick(opt.letter)}
-              className="opt-btn"
-              style={{
-                textAlign: "left",
-                display: "flex",
-                alignItems: "flex-start",
-                gap: 14,
-                border: "2.5px solid #1B1730",
-                background: flash === opt.letter ? "#FFC93C" : "#FFFDF6",
-                padding: "13px 15px",
-                cursor: "pointer",
-                boxShadow: "3px 3px 0 #1B1730",
-                fontFamily: "'Baloo 2', sans-serif",
-              }}
-            >
-              <span style={{ fontSize: 16, lineHeight: 1.5, fontWeight: 500 }}>
-                {opt.text}
-              </span>
-            </button>
-          ))}
-        </div>
+      <div class="progress-row">${segments}</div>
+      <div class="panel q-panel">
+        <p class="display q-prompt">${question.prompt}</p>
+        <div class="options-col">${options}</div>
       </div>
     </div>
-  );
+  `;
+  document.querySelectorAll(".opt-btn-item").forEach((btn) => {
+    btn.addEventListener("click", () => pick(btn.dataset.letter));
+  });
 }
 
-function Result({ letter, onRetake, onExplore }) {
+function renderResult() {
+  const letter = winner();
   const r = RESULTS[letter];
 
-  return (
-    <div className="max-w-3xl mx-auto px-6 py-16">
-      <div className="mono" style={{ fontSize: 12, letterSpacing: 2, marginBottom: 8, color: r.color }}>
-        ★ RESULT UNLOCKED ★
-      </div>
-      <h1
-        className="display"
-        style={{ fontSize: "clamp(2.3rem, 7vw, 3.8rem)", color: r.color, lineHeight: 1 }}
-      >
-        {r.hero}
-      </h1>
-      <p className="mono" style={{ fontSize: 12, letterSpacing: 1, opacity: 0.75, marginTop: 8, marginBottom: 18 }}>
-        PEDAGOGY: {r.pedagogy.toUpperCase()}
-      </p>
+  app.innerHTML = `
+    <div class="wrap">
+      <div class="mono result-eyebrow" style="color:${r.color};">\u2605 RESULT UNLOCKED \u2605</div>
+      <h1 class="display result-hero" style="color:${r.color};">${r.hero}</h1>
+      <p class="mono result-pedagogy">PEDAGOGY: ${r.pedagogy.toUpperCase()}</p>
 
-      <div className="panel" style={{ padding: "22px 24px", marginBottom: 28 }}>
-        <p style={{ fontSize: 16, lineHeight: 1.65, fontWeight: 500 }}>{r.description}</p>
-      </div>
+      <div class="panel desc-panel"><p>${r.description}</p></div>
 
-      <div className="grid-2" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 22 }}>
-        {/* Superhero image placeholder */}
-        <div>
-          <div
-            className="panel halftone"
-            style={{
-              aspectRatio: "1 / 1",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              borderColor: r.color,
-              boxShadow: `7px 7px 0 ${r.color}`,
-            }}
-          >
-            <div
-              style={{
-                background: "#FFFDF6",
-                border: `2.5px dashed ${r.color}`,
-                padding: "18px 16px",
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                gap: 8,
-              }}
-            >
-              <ImageIcon size={34} strokeWidth={1.5} color={r.color} />
-              <span className="mono" style={{ fontSize: 11, textAlign: "center", maxWidth: 160 }}>
-                SUPERHERO IMAGE PLACEHOLDER
-              </span>
-            </div>
+      <div class="media-grid">
+        <div class="panel halftone media-box" style="border-color:${r.color};box-shadow:7px 7px 0 ${r.color};">
+          <div class="img-placeholder-inner" style="border:2.5px dashed ${r.color};">
+            <span style="color:${r.color};">${icon.image}</span>
+            <span class="mono" style="font-size:11px;text-align:center;max-width:160px;">SUPERHERO IMAGE PLACEHOLDER</span>
           </div>
         </div>
 
-        {/* Video placeholder */}
-        <div>
-          <div
-            className="panel"
-            style={{
-              aspectRatio: "1 / 1",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              flexDirection: "column",
-              gap: 10,
-              background: "#1B1730",
-              borderColor: r.color,
-              boxShadow: `7px 7px 0 ${r.color}`,
-            }}
-          >
-            <div
-              style={{
-                width: 62,
-                height: 62,
-                borderRadius: "50%",
-                background: r.color,
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
-              <Play size={26} color="#1B1730" fill="#1B1730" />
-            </div>
-            <span className="mono" style={{ fontSize: 11, color: "#FFF6E3", textAlign: "center", maxWidth: 180 }}>
-              VIDEO: INTRODUCING {r.pedagogy.toUpperCase()}
-            </span>
-          </div>
+        <div class="panel media-box" style="background:var(--ink);border-color:${r.color};box-shadow:7px 7px 0 ${r.color};">
+          ${driveEmbed(r.fileId)}
         </div>
       </div>
 
-      <div style={{ display: "flex", flexWrap: "wrap", gap: 14, marginTop: 32 }}>
-        <button
-          onClick={onExplore}
-          className="opt-btn pop-btn"
-          style={{
-            background: "#FFC93C",
-            border: "3px solid #1B1730",
-            boxShadow: "5px 5px 0 #1B1730",
-            padding: "12px 22px",
-            fontFamily: "'Fredoka', sans-serif", fontWeight: 600,
-            fontSize: 18,
-            letterSpacing: 0.5,
-            display: "flex",
-            alignItems: "center",
-            gap: 8,
-            cursor: "pointer",
-          }}
-        >
-          <Sparkles size={18} /> MEET ALL FIVE SUPERPOWERS
-        </button>
-
-        <button
-          onClick={onRetake}
-          className="opt-btn"
-          style={{
-            background: "#FFFDF6",
-            border: "2.5px solid #1B1730",
-            boxShadow: "4px 4px 0 #1B1730",
-            padding: "12px 20px",
-            fontFamily: "'Space Mono', monospace",
-            fontSize: 13,
-            letterSpacing: 1,
-            display: "flex",
-            alignItems: "center",
-            gap: 8,
-            cursor: "pointer",
-          }}
-        >
-          <RotateCcw size={15} /> RETAKE THE QUIZ
-        </button>
+      <div class="result-actions">
+        <button id="exploreBtn" class="opt-btn pop-btn action-btn primary">${icon.sparkles} MEET ALL FIVE SUPERPOWERS</button>
+        <button id="retakeBtn" class="opt-btn action-btn secondary">${icon.redo} RETAKE THE QUIZ</button>
       </div>
     </div>
-  );
+  `;
+  document.getElementById("exploreBtn").addEventListener("click", openGallery);
+  document.getElementById("retakeBtn").addEventListener("click", start);
 }
 
-function Gallery({ current, onBack }) {
-  return (
-    <div className="max-w-3xl mx-auto px-6 py-16">
-      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 8 }}>
-        <span className="mono" style={{ fontSize: 12, letterSpacing: 2, opacity: 0.75 }}>
-          ★ THE FULL ROSTER ★
-        </span>
-        <button
-          onClick={onBack}
-          className="opt-btn"
-          style={{
-            background: "#FFFDF6",
-            border: "2.5px solid #1B1730",
-            boxShadow: "3px 3px 0 #1B1730",
-            padding: "6px 12px",
-            display: "flex",
-            alignItems: "center",
-            gap: 6,
-            fontFamily: "'Space Mono', monospace",
-            fontSize: 12,
-            cursor: "pointer",
-          }}
-        >
-          <X size={14} /> CLOSE
-        </button>
+function renderGallery() {
+  const currentLetter = answers.length === 5 ? winner() : null;
+  const cards = LETTERS.map((l) => {
+    const r = RESULTS[l];
+    const isYou = l === currentLetter;
+    return `
+      <div class="panel roster-card" style="border-color:${r.color};box-shadow:6px 6px 0 ${r.color};">
+        ${isYou ? `<span class="display you-badge">THAT'S YOU!</span>` : ""}
+        <div class="roster-head">
+          <span class="display roster-badge" style="background:${r.color};">${l}</span>
+          <span class="display roster-name" style="color:${r.color};">${r.hero}</span>
+        </div>
+        <p class="mono roster-ped">PEDAGOGY: ${r.pedagogy.toUpperCase()}</p>
+        <p class="roster-desc">${r.description}</p>
       </div>
+    `;
+  }).join("");
 
-      <h2 className="display" style={{ fontSize: "clamp(2rem, 6vw, 3rem)", marginBottom: 24 }}>
-        MEET THE FIVE SUPERPOWERS
-      </h2>
-
-      <div style={{ display: "flex", flexDirection: "column", gap: 18 }}>
-        {LETTERS.map((l) => {
-          const r = RESULTS[l];
-          const isYou = l === current;
-          return (
-            <div
-              key={l}
-              className="panel"
-              style={{
-                padding: "20px 22px",
-                borderColor: r.color,
-                boxShadow: `6px 6px 0 ${r.color}`,
-                position: "relative",
-              }}
-            >
-              {isYou && (
-                <span
-                  className="display"
-                  style={{
-                    position: "absolute",
-                    top: -14,
-                    right: 16,
-                    background: "#FFC93C",
-                    border: "2.5px solid #1B1730",
-                    padding: "2px 10px",
-                    fontSize: 14,
-                    transform: "rotate(3deg)",
-                  }}
-                >
-                  THAT'S YOU!
-                </span>
-              )}
-              <div style={{ display: "flex", alignItems: "baseline", gap: 10, flexWrap: "wrap" }}>
-                <span
-                  className="display"
-                  style={{
-                    width: 34,
-                    height: 34,
-                    borderRadius: "50%",
-                    border: "2.5px solid #1B1730",
-                    background: r.color,
-                    color: "#FFFDF6",
-                    display: "inline-flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    fontSize: 17,
-                    flexShrink: 0,
-                  }}
-                >
-                  {l}
-                </span>
-                <span className="display" style={{ fontSize: 24, color: r.color }}>
-                  {r.hero}
-                </span>
-              </div>
-              <p className="mono" style={{ fontSize: 11, letterSpacing: 1, opacity: 0.7, margin: "8px 0" }}>
-                PEDAGOGY: {r.pedagogy.toUpperCase()}
-              </p>
-              <p style={{ fontSize: 15, lineHeight: 1.55, fontWeight: 500 }}>{r.description}</p>
-            </div>
-          );
-        })}
+  app.innerHTML = `
+    <div class="wrap">
+      <div class="gallery-header">
+        <span class="mono" style="font-size:12px;letter-spacing:2px;opacity:.75;">\u2605 THE FULL ROSTER \u2605</span>
+        <button id="closeBtn" class="opt-btn close-btn">${icon.x} CLOSE</button>
       </div>
+      <h2 class="display" style="font-size:clamp(2rem,6vw,3rem);margin-bottom:24px;">MEET THE FIVE SUPERPOWERS</h2>
+      ${cards}
     </div>
-  );
+  `;
+  document.getElementById("closeBtn").addEventListener("click", closeGallery);
 }
+
+render();
+</script>
+</body>
+</html>
