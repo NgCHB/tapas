@@ -90,7 +90,7 @@
   /* Result */
   .result-eyebrow { font-size: 12px; letter-spacing: 2px; margin-bottom: 8px; }
   .result-hero { font-size: clamp(2.3rem, 7vw, 3.8rem); line-height: 1; }
-  .result-pedagogy { font-size: 14px; font-weight: bold; letter-spacing: 1px; opacity: .75; margin-top: 8px; margin-bottom: 18px; }
+  .result-pedagogy { font-size: 16px; letter-spacing: 1px; opacity: .75; margin-top: 8px; margin-bottom: 18px; text-align: center; }
   .desc-panel { padding: 22px 24px; margin-bottom: 28px; }
   .desc-panel p { font-size: 16px; line-height: 1.65; font-weight: 500; margin: 0; }
   .media-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; }
@@ -206,7 +206,7 @@ const RESULTS = {
     pedagogy: "Information Processing Theory",
     color: "#2D6FE0",
     description:
-      'You should read more about Information Processing Theory. You are a master of the "Memory Pipeline," focusing on how students attend to, encode, and retrieve information.',
+      'You are a master of the "Memory Pipeline," focusing on how students attend to, encode, and retrieve information. Watch the video below to learn more about Information Processing Theory.',
     imageSrc: "https://ngchb.github.io/tapas/IPT.png",
     videoSrc: "https://ngchb.github.io/tapas/IPT.mp4",
   },
@@ -215,7 +215,7 @@ const RESULTS = {
     pedagogy: "Concept-Based Inquiry",
     color: "#16A34A",
     description:
-      'You should dive deeper into Concept-Based Inquiry. You love "Big Ideas" and want students to see the "why" behind the facts through transferable, universal principles.',
+      'You love "Big Ideas" and want students to see the "why" behind the facts through transferable, universal principles. Watch the video below to dive deeper into Concept-Based Inquiry.',
     imageSrc: "https://ngchb.github.io/tapas/IPT.png",
     videoSrc: "https://ngchb.github.io/tapas/IPT.mp4",
   },
@@ -224,27 +224,27 @@ const RESULTS = {
     pedagogy: "Differentiated Instruction (DI)",
     color: "#9333EA",
     description:
-      "Differentiated Instruction (DI) is your calling! You believe in proactively planning for different readiness levels and interests to ensure every student succeeds.",
+      "Differentiated Instruction (DI) is your calling! You believe in proactively planning for different readiness levels and interests to ensure every student succeeds. Watch the video below to learn more about DI.",
     imageSrc: "https://ngchb.github.io/tapas/IPT.png",
-    videoSrc: "https://ngchb.github.io/tapas/IPT.mp4"
+    videoSrc: "https://ngchb.github.io/tapas/IPT.mp4",
   },
   D: {
     hero: "The Collaborative Captain",
     pedagogy: "Reciprocal Teaching",
     color: "#06B6D4",
     description:
-      "Reciprocal Teaching is perfect for you. You value purposeful dialogue and want to empower students to lead their own learning through structured roles like Clarifying and Questioning.",
+      "Reciprocal Teaching is perfect for you. You value purposeful dialogue and want to empower students to lead their own learning through structured roles like Clarifying and Questioning. Watch the video below to see Reciprocal Teaching in action.",
     imageSrc: "https://ngchb.github.io/tapas/IPT.png",
-    videoSrc: "https://ngchb.github.io/tapas/IPT.mp4"
+    videoSrc: "https://ngchb.github.io/tapas/IPT.mp4",
   },
   E: {
     hero: "The Joy Seeker",
     pedagogy: "Pedagogies of Play (POP)",
     color: "#E4372B",
     description:
-      'You are a champion for Pedagogies of Play (POP). You believe play is the foundation of learning and want to bring playfulness and "fantasy" into the classroom to spark creativity.',
+      'You are a champion for Pedagogies of Play (POP). You believe play is the foundation of learning and want to bring playfulness and "fantasy" into the classroom to spark creativity. Watch the video below to learn more about POP.',
     imageSrc: "https://ngchb.github.io/tapas/IPT.png",
-    videoSrc: "https://ngchb.github.io/tapas/IPT.mp4"
+    videoSrc: "https://ngchb.github.io/tapas/IPT.mp4",
   },
 };
 
@@ -338,7 +338,7 @@ function renderLanding() {
             <h1 class="display hero-title">WHAT'S YOUR<br/>TEACHING SUPERPOWER?</h1>
           </div>
           <p style="max-width:480px;margin-top:30px;font-size:18px;line-height:1.6;font-weight:500;">
-            Five quick questions. One classroom identity you already have &mdash;
+            Five questions. One classroom identity you already have &mdash;
             you just haven't named it yet.
           </p>
           <button id="startBtn" class="opt-btn pop-btn start-btn">
