@@ -6,13 +6,14 @@
 <title>What's Your Teaching Superpower?</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Baloo+2:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Baloo+2:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
 <style>
   :root {
-    --paper: #FFF6E3;
+    --paper: #FFFFFF;
     --card: #FFFDF6;
     --ink: #1B1730;
     --gold: #FFC93C;
+    --pink: #FF2D78;
   }
   * { box-sizing: border-box; }
   body {
@@ -21,8 +22,14 @@
     color: var(--ink);
     font-family: 'Baloo 2', sans-serif;
   }
+  body::before {
+    content: "";
+    position: fixed; top: 0; left: 0; right: 0; height: 8px;
+    background: linear-gradient(90deg, #2D6FE0, #7A3FE0, #0FA37F, #E23350, #F0821F);
+    z-index: 50;
+  }
   .display { font-family: 'Fredoka', sans-serif; font-weight: 700; letter-spacing: 0.2px; }
-  .mono { font-family: 'Space Mono', monospace; }
+  .mono { font-family: 'JetBrains Mono', monospace; }
   .wrap { max-width: 760px; margin: 0 auto; padding: 64px 24px 80px; }
   .halftone {
     background-image: radial-gradient(var(--ink) 1.6px, transparent 1.6px);
@@ -42,23 +49,32 @@
   /* Landing */
   .landing-bg {
     min-height: 100vh;
-    background: linear-gradient(180deg, rgba(255,246,227,0.35) 0%, rgba(255,246,227,0.97) 55%);
+    background: linear-gradient(180deg, rgba(255,255,255,0.25) 0%, rgba(255,255,255,0.97) 55%);
   }
   .landing-inner { display: flex; flex-direction: column; align-items: center; text-align: center; }
   .badge {
-    background: var(--ink); color: var(--paper); padding: 5px 14px; font-size: 12px;
+    background: var(--ink); color: #FFFFFF; padding: 5px 14px; font-size: 12px;
     letter-spacing: 2px; display: inline-block; transform: rotate(-1.5deg);
   }
+  .hero-title-wrap { position: relative; display: inline-block; }
+  .hero-burst {
+    position: absolute; top: 50%; left: 50%; width: 150%; padding-bottom: 150%;
+    transform: translate(-50%, -50%); border-radius: 50%; z-index: -1;
+    background: repeating-conic-gradient(var(--gold) 0deg 12deg, transparent 12deg 24deg);
+    opacity: 0.4;
+  }
   .hero-title {
+    position: relative;
     font-size: clamp(2.6rem, 8vw, 5.2rem);
     line-height: 1.02; margin-top: 24px;
-    text-shadow: 5px 5px 0 var(--gold), 8px 8px 0 var(--ink);
+    text-shadow: 4px 4px 0 var(--gold), 8px 8px 0 var(--pink), 12px 12px 0 var(--ink);
     color: var(--card);
     -webkit-text-stroke: 2px var(--ink);
   }
   .start-btn {
     margin-top: 38px; background: var(--gold); border: 3.5px solid var(--ink);
-    box-shadow: 5px 5px 0 var(--ink); padding: 15px 32px; font-family: 'Fredoka', sans-serif;
+    box-shadow: 5px 5px 0 var(--ink), 9px 9px 0 rgba(255,45,120,0.35); padding: 15px 32px;
+    font-family: 'Fredoka', sans-serif;
     font-weight: 600; font-size: 22px; display: inline-flex; align-items: center; gap: 10px;
     cursor: pointer;
   }
@@ -88,12 +104,9 @@
   @media (max-width: 640px) { .media-grid { grid-template-columns: 1fr; } }
   .media-box {
     display: flex; align-items: center; justify-content: center;
-    overflow: hidden;
+    overflow: hidden; aspect-ratio: 9 / 16; max-width: 260px; margin: 0 auto;
   }
-  .media-box.image-box { aspect-ratio: 1 / 1; }
-  .media-box.video-box { aspect-ratio: 9 / 16; max-width: 260px; margin: 0 auto; }
-  .media-box iframe { width: 100%; height: 100%; border: none; }
-  .media-box img { width: 100%; height: 100%; object-fit: cover; }
+  .media-box img, .media-box video { width: 100%; height: 100%; object-fit: cover; }
   .result-actions { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 32px; }
   .action-btn {
     border: 3px solid var(--ink); padding: 12px 22px; font-family: 'Fredoka', sans-serif;
@@ -102,7 +115,7 @@
   }
   .action-btn.primary { background: var(--gold); box-shadow: 5px 5px 0 var(--ink); }
   .action-btn.secondary {
-    background: var(--card); box-shadow: 4px 4px 0 var(--ink); font-family: 'Space Mono', monospace;
+    background: var(--card); box-shadow: 4px 4px 0 var(--ink); font-family: 'JetBrains Mono', monospace;
     font-size: 13px; font-weight: 400; letter-spacing: 1px;
   }
 
@@ -111,7 +124,7 @@
   .close-btn {
     background: var(--card); border: 2.5px solid var(--ink); box-shadow: 3px 3px 0 var(--ink);
     padding: 6px 12px; display: inline-flex; align-items: center; gap: 6px;
-    font-family: 'Space Mono', monospace; font-size: 12px; cursor: pointer;
+    font-family: 'JetBrains Mono', monospace; font-size: 12px; cursor: pointer;
   }
   .roster-card { padding: 20px 22px; position: relative; margin-bottom: 18px; }
   .you-badge {
@@ -126,9 +139,9 @@
   }
   .roster-name { font-size: 24px; }
   .roster-ped { font-size: 11px; letter-spacing: 1px; opacity: .7; margin: 8px 0; }
-  .roster-desc { font-size: 15px; line-height: 1.55; font-weight: 500; margin: 0 0 16px; }
-  .roster-video { aspect-ratio: 9 / 16; max-width: 220px; overflow: hidden; }
-  .roster-video iframe { width: 100%; height: 100%; border: none; }
+  .roster-desc { font-size: 15px; line-height: 1.55; font-weight: 500; margin: 0; }
+  .roster-media { display: flex; gap: 14px; margin: 14px 0 16px; flex-wrap: wrap; }
+  .roster-media .media-box { max-width: 130px; margin: 0; }
 
   .hidden { display: none; }
 </style>
@@ -152,7 +165,7 @@ const QUESTIONS = [
     ],
   },
   {
-    prompt: "Your students are stuck on a difficult reading passage. What\u2019s your move?",
+    prompt: "Your students are stuck on a difficult concept or passage. What\u2019s your move?",
     options: [
       { letter: "D", text: 'One student "Clarifies" the hard words, another "Summarizes" the main idea.' },
       { letter: "B", text: 'Ask them to look past the facts and find the "Universal Principle" behind it.' },
@@ -193,7 +206,7 @@ const QUESTIONS = [
   },
 ];
 
-// Replace each fileId with the real Google Drive file ID, and each imageSrc with the real image path/URL, for that superhero.
+// Replace each imageSrc and videoSrc "xx" with the real filename hosted at https://ngchb.github.io/tapas/
 const RESULTS = {
   A: {
     hero: "The Memory Architect",
@@ -201,8 +214,8 @@ const RESULTS = {
     color: "#2D6FE0",
     description:
       'You should read more about Information Processing Theory. You are a master of the "Memory Pipeline," focusing on how students attend to, encode, and retrieve information.',
-    fileId: "1kCXPTGWTAk_IQUYJxpQyYeN9XvTN3gBm",
-    imageSrc: "https://lh3.googleusercontent.com/d/1UiolycDTnJvz0n4NtEH_Khyxi_c3J5pW",
+    imageSrc: "https://ngchb.github.io/tapas/IPT.png",
+    videoSrc: "https://ngchb.github.io/tapas/IPT.mp4",
   },
   B: {
     hero: "The Big-Picture Visionary",
@@ -210,8 +223,8 @@ const RESULTS = {
     color: "#7A3FE0",
     description:
       'You should dive deeper into Concept-Based Inquiry. You love "Big Ideas" and want students to see the "why" behind the facts through transferable, universal principles.',
-    fileId: "1kCXPTGWTAk_IQUYJxpQyYeN9XvTN3gBm",
-    imageSrc: "https://lh3.googleusercontent.com/d/1UiolycDTnJvz0n4NtEH_Khyxi_c3J5pW",
+    imageSrc: "https://ngchb.github.io/tapas/CBL.png",
+    videoSrc: "https://ngchb.github.io/tapas/IPT.mp4",
   },
   C: {
     hero: "The Personalizer",
@@ -219,8 +232,8 @@ const RESULTS = {
     color: "#0FA37F",
     description:
       "Differentiated Instruction (DI) is your calling! You believe in proactively planning for different readiness levels and interests to ensure every student succeeds.",
-    fileId: "1kCXPTGWTAk_IQUYJxpQyYeN9XvTN3gBm",
-    imageSrc: "https://lh3.googleusercontent.com/d/1UiolycDTnJvz0n4NtEH_Khyxi_c3J5pW",
+    imageSrc: "https://ngchb.github.io/tapas/DI.png",
+    videoSrc: "https://ngchb.github.io/tapas/IPT.mp4",
   },
   D: {
     hero: "The Collaborative Captain",
@@ -228,8 +241,8 @@ const RESULTS = {
     color: "#E23350",
     description:
       "Reciprocal Teaching is perfect for you. You value purposeful dialogue and want to empower students to lead their own learning through structured roles like Clarifying and Questioning.",
-    fileId: "1kCXPTGWTAk_IQUYJxpQyYeN9XvTN3gBm",
-    imageSrc: "https://lh3.googleusercontent.com/d/1UiolycDTnJvz0n4NtEH_Khyxi_c3J5pW",
+    imageSrc: "https://ngchb.github.io/tapas/RT.png",
+    videoSrc: "https://ngchb.github.io/tapas/IPT.mp4",
   },
   E: {
     hero: "The Joy Seeker",
@@ -237,8 +250,8 @@ const RESULTS = {
     color: "#F0821F",
     description:
       'You are a champion for Pedagogies of Play (POP). You believe play is the foundation of learning and want to bring playfulness and "fantasy" into the classroom to spark creativity.',
-    fileId: "1kCXPTGWTAk_IQUYJxpQyYeN9XvTN3gBm",
-    imageSrc: "https://lh3.googleusercontent.com/d/1UiolycDTnJvz0n4NtEH_Khyxi_c3J5pW",
+    imageSrc: "https://ngchb.github.io/tapas/POP.png",
+    videoSrc: "https://ngchb.github.io/tapas/IPT.mp4",
   },
 };
 
@@ -308,8 +321,8 @@ function closeGallery() {
   render();
 }
 
-function driveEmbed(fileId) {
-  return `<iframe src="https://drive.google.com/file/d/${fileId}/preview" width="640" height="480" allow="autoplay"></iframe>`;
+function videoEmbed(src) {
+  return `<video src="${src}" controls playsinline></video>`;
 }
 
 /* ---------- RENDER ---------- */
@@ -327,7 +340,10 @@ function renderLanding() {
       <div class="landing-bg">
         <div class="wrap landing-inner">
           <span class="mono badge">\u2605 TEACHER PROFESSIONAL DEVELOPMENT \u2605</span>
-          <h1 class="display hero-title">WHAT'S YOUR<br/>TEACHING SUPERPOWER?</h1>
+          <div class="hero-title-wrap">
+            <div class="hero-burst"></div>
+            <h1 class="display hero-title">WHAT'S YOUR<br/>TEACHING SUPERPOWER?</h1>
+          </div>
           <p style="max-width:480px;margin-top:30px;font-size:18px;line-height:1.6;font-weight:500;">
             Five quick questions. One classroom identity you already have &mdash;
             you just haven't named it yet. Answer honestly and we'll match you
@@ -387,12 +403,12 @@ function renderResult() {
       <div class="panel desc-panel"><p>${r.description}</p></div>
 
       <div class="media-grid">
-        <div class="halftone media-box image-box">
+        <div class="halftone media-box">
           <img src="${r.imageSrc}" alt="${r.imageSrc}" />
         </div>
 
-        <div class="media-box video-box" style="background:var(--ink);">
-          ${driveEmbed(r.fileId)}
+        <div class="media-box" style="background:var(--ink);">
+          ${videoEmbed(r.videoSrc)}
         </div>
       </div>
 
@@ -419,10 +435,15 @@ function renderGallery() {
           <span class="display roster-name" style="color:${r.color};">${r.hero}</span>
         </div>
         <p class="mono roster-ped">PEDAGOGY: ${r.pedagogy.toUpperCase()}</p>
-        <p class="roster-desc">${r.description}</p>
-        <div class="roster-video" style="background:var(--ink);">
-          ${driveEmbed(r.fileId)}
+        <div class="roster-media">
+          <div class="halftone media-box">
+            <img src="${r.imageSrc}" alt="${r.imageSrc}" />
+          </div>
+          <div class="media-box" style="background:var(--ink);">
+            ${videoEmbed(r.videoSrc)}
+          </div>
         </div>
+        <p class="roster-desc">${r.description}</p>
       </div>
     `;
   }).join("");
