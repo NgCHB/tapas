@@ -97,7 +97,7 @@
   @media (max-width: 640px) { .media-grid { grid-template-columns: 1fr; } }
   .media-box {
     display: flex; align-items: center; justify-content: center;
-    overflow: hidden; aspect-ratio: 9 / 16; max-width: 260px; margin: 0 auto;
+    overflow: hidden; aspect-ratio: 9 / 16; max-width: 286px; margin: 0 auto;
   }
   .media-box img, .media-box video { width: 100%; height: 100%; object-fit: cover; }
   .result-actions { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 32px; }
@@ -395,12 +395,12 @@ function renderResult() {
       <div class="panel desc-panel"><p>${r.description}</p></div>
 
       <div class="media-grid">
-        <div class="halftone media-box">
-          <img src="${r.imageSrc}" alt="${r.imageSrc}" />
-        </div>
-
         <div class="media-box" style="background:var(--ink);">
           ${videoEmbed(r.videoSrc)}
+        </div>
+
+        <div class="halftone media-box">
+          <img src="${r.imageSrc}" alt="${r.imageSrc}" />
         </div>
       </div>
 
